@@ -20,8 +20,42 @@ val sizeFactor : Float = 2.9f
 val ballFactor : Float = 4.5f
 val delay : Long = 20
 val backColor : Int = Color.parseColor("#BDBDBD")
+val lines : Int = 4
+val totalRot : Float = 90f
 
 fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n))
 fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
+
+fun Canvas.drawLineBallEnder(i : Int, scale : Float, w : Float, h : Float, paint : Paint) {
+    val size : Float = Math.min(w, h) / sizeFactor
+    val r : Float = size / ballFactor
+    val sf : Float = scale.sinify()
+    val sf1 : Float = sf.divideScale(0, parts)
+    val sf2 : Float = sf.divideScale(1, parts)
+    val sf3 : Float = sf.divideScale(2, parts)
+    val sf4 : Float = sf.divideScale(3, parts)
+    val rotPart : Float = totalRot / (lines - 1)
+    save()
+    translate(w / 2, h / 2)
+    rotate(-rotPart * i * sf3)
+    drawLine(0f, 0f, size * sf1, 0f, paint)
+    drawCircle(size * sf4, 0f, r * sf2, paint)
+    restore()
+}
+
+fun Canvas.drawMultiLineBallEnder(scale : Float, w : Float, h : Float, paint : Paint) {
+    for (j in 0..(lines - 1)) {
+        drawLineBallEnder(j, scale, w, h, paint)
+    }
+}
+
+fun Canvas.drawMLBENode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    paint.color = Color.parseColor(colors[i])
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    drawMultiLineBallEnder(scale, w, h, paint)
+}
