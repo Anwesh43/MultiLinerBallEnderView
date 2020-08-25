@@ -212,4 +212,13 @@ class MultiLineBallEnderView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : MultiLineBallEnderView{
+            val view : MultiLineBallEnderView = MultiLineBallEnderView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
